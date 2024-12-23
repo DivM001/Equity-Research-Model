@@ -6,7 +6,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.preprocessing import LabelEncoder
 
 
-df = pd.read_csv("C:\\ind_nifty500list.csv")
+df = pd.read_csv("ind_nifty500list.csv")
 
 stock_universe = df['Symbol'].tolist()
 
@@ -49,11 +49,6 @@ stock_price = ticker.info.get('previousClose')
 
 stock_roa = ticker.info.get('returnOnAssets')
 
-#Testing
-print(stock_cr)
-print(stock_qr)
-print(f"Price is {stock_price}")
-print(f"target price is {stock_target_price}")
 
 stock_pnl = ticker.income_stmt
 
@@ -62,8 +57,6 @@ stock_int_exp = stock_pnl.loc['Interest Expense']
 stock_ebit = stock_pnl.loc['EBIT']
 stock_icr = stock_ebit/stock_int_exp
 cur_stock_icr = stock_icr.iloc[0]
-print(cur_stock_icr)
-
 
 #Actual EPS
 eps = financials.loc['Diluted EPS']
@@ -75,24 +68,22 @@ cr_score =0
 if stock_cr >=1.95 and stock_cr <= 4:
     cr_score=1
 
-print(f"CR Score is {cr_score}")
+
 
 qr_score = 0
 if stock_qr >= 0.95 and stock_qr <=2:
     qr_score=1
 
-print(f"QR Score is {qr_score}")
+
 
 icr_score = 0
 if cur_stock_icr > 2.2:
     icr_score=1
-print(f"ICR score is {icr_score} ")
+
 
 analyst_price_score = 0
 if stock_price < stock_target_price:
     analyst_price_score=1
-
-print(f"Analyst price Score is {analyst_price_score}")
 
 stocks_in_industry =[]
 
@@ -163,8 +154,6 @@ op_score = 0
 if stock_op_margin > industry_op_margin:
     op_score = 1
 
-print(f"roe score is {roe_score}")
-print(f"op_margin score is {op_score}")
 
 roa =[]
 for l in stocks_in_industry:
@@ -180,7 +169,7 @@ roa_score =0
 if stock_roa > industry_roa:
     roa_score =1
 
-print(f"roa score is {roa_score}")
+
 
 total_score = (
     (0.9* cr_score) +
@@ -192,7 +181,7 @@ total_score = (
         (0.1175*roa_score) +
          (0.1175*op_score))
 
-print(f"total score is {total_score}")
+print(f"Total score is {total_score}")
 
 if total_score >0.55:
     print(f"This stock is a buy")
